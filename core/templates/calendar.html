@@ -1,0 +1,128 @@
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+    var initialLocaleCode = 'tr';
+    var localeSelectorEl = document.getElementById('locale-selector');
+    var calendarEl = document.getElementById('calendar');
+  
+    var calendar = new FullCalendar.Calendar(calendarEl, {
+      headerToolbar: {
+        left: 'prev,next today',
+        center: 'title',
+        right: 'dayGridMonth,timeGridWeek,timeGridDay,listMonth'
+      },
+      locale: initialLocaleCode,
+      buttonIcons: true, 
+      weekNumbers: true,
+      navLinks: true, 
+      editable: true,
+      selectable: true,
+      dayMaxEvents: true, 
+      events: '/calendar',
+      height: "auto",
+      
+      
+      eventDrop: function (info) {
+        info.el.style.borderColor = 'red';
+        var event = info.event;
+        console.log(event)
+                  var start = moment(event.start).format('DD/MM/YYYY HH:mm');
+                  var end = moment(event.end).format('DD/MM/YYYY HH:mm');
+                  
+                  var title = event.title;
+                  var id = event.id;
+                  var json_string = {'title': title, 'start': start, 'end': end, 'id': id,}
+                  console.log(json_string)
+                  $.ajax({
+                      type: "GET",
+                      url: '/update',
+                      data: json_string,
+                      dataType: "json",
+                      success: function (data) {
+                        calendar.refetchEvents();
+                          alert('Güncellendi');
+                      },
+                      failure: function (data) {
+                          alert('Hata oluştu!!!');
+                      }
+                  });
+              },
+        eventResize: function (info) {
+        info.el.style.borderColor = 'red';
+        var event = info.event;
+        console.log(event)
+                  var start = moment(event.start).format('DD/MM/YYYY HH:mm');
+                  var end = moment(event.end).format('DD/MM/YYYY HH:mm');
+                  
+                  var title = event.title;
+                  var id = event.id;
+                  var json_string = {'title': title, 'start': start, 'end': end, 'id': id,}
+                  console.log(json_string)
+                  $.ajax({
+                      type: "GET",
+                      url: '/update',
+                      data: json_string,
+                      dataType: "json",
+                      success: function (data) {
+                        calendar.refetchEvents();
+                          alert('Güncellendi');
+                      },
+                      failure: function (data) {
+                          alert('Hata oluştu!!!');
+                      }
+                  });
+              },
+      select: function (info) {
+        console.log(info)
+        show_modal(info)
+         },
+      eventClick: function (info) {
+        var event = info.event;
+                  if (confirm("Silmek istediğinize emin misiniz?")) {
+                      var id = event.id;
+                      $.ajax({
+                          type: "GET",
+                          url: '/delete',
+                          data: {'id': id},
+                          dataType: "json",
+                          success: function (data) {
+                            calendar.refetchEvents();
+                              alert('Silindi');
+                          },
+                          failure: function (data) {
+                              alert('Hata oluştu!!!');
+                          }
+                      });
+                  }}
+    });
+  
+    calendar.render();
+  
+  
+    function show_modal(info){
+
+        $("#myModal").on('shown.bs.modal', function () {
+       
+       var start = moment(info.start).format('DD/MM/YYYY HH:mm');
+       var end = moment(info.end).format('DD/MM/YYYY HH:mm');
+       console.log(start,end)
+       $("#id_start").val(start);
+       $("#id_end").val(end);  
+     
+       });
+
+
+        $('#myModal').on('show.bs.modal', function (e) {
+  
+        var modal = $(this);
+        modal.find('.modal-content').load("/create_modal");
+
+        });
+
+        $('#myModal').modal("show");
+
+      }
+  
+  });
+  
+  
+  </script>

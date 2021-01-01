@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  {% load static %}
+  {% include 'css.html' %}
+  <title></title>
+</head>
+<body>
+  {% include 'nav.html' %}
+
+{% block content %}
+
+<div class="container">
+    <div id="calendar"></div>
+</div>
+
+<div id="myModal" class="modal fade" tabindex="-1" role="dialog">
+      <div class="modal-dialog">
+          <div class="modal-content">
+          </div>
+      </div>
+</div>
+
+{% endblock content %}
+{% include 'js.html' %}
+{% include 'calendar.html' %}
+<body>
+</html>
